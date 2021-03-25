@@ -1,6 +1,11 @@
 #authored by Yang Yu; all rights reserved;
 #yuyangjason@gmail.com,yzy43@psu.edu
+  
+#authored by Jinhao Lu; all rights reserved;
+#email: jxl469@psu.edu
+
 #data:https://data.cdc.gov/NCHS/Indicators-of-Anxiety-or-Depression-Based-on-Repor/8pt5-q6wp
+#https://www.cdc.gov/nchs/covid19/pulse/mental-health.htm
 #import package
 setwd("~/ds340w")
 library("data.table")
@@ -9,7 +14,7 @@ library("stringr")
 library(lubridate)
 
 #load data
-data <- fread("data.csv")
+data <- fread("Mental_Health.csv")#https://data.cdc.gov/NCHS/Indicators-of-Anxiety-or-Depression-Based-on-Repor/8pt5-q6wp
 #set Time zone & format
 Sys.setlocale("LC_TIME", "English")
 
@@ -77,3 +82,28 @@ geom_line(aes(colour = factor(Subgroup)))+
 theme(axis.text.x = element_text(hjust = 1, vjust = .5))+
 scale_x_date(date_labels = "%Y %b")+ylab("Percentage")+ 
 ggtitle("Symptoms of Anxiety Disorder or Depressive Disorder In Pennsylvania")
+
+
+################----------USE Num_response dataset----------#######################
+
+sample_data<- fread("Num_Response.csv")#https://www.cdc.gov/nchs/covid19/pulse/mental-health.htm
+
+#sample_data processing
+sample_data$weighted_response_rate <- as.numeric(sub("%","",sample_data$weighted_response_rate))/100 #ratio column val into digit
+sample_data$sample_size <- (sub(",","",sample_data$sample_size))#sub "," in val
+sample_data$number_response <- sample_data$weighted_response_rate * as.numeric(sample_data$sample_size)
+sample_data$year <- 2020 #add year variable to the table
+sample_data$year[22:25] <- 2021
+
+#graph of sample number
+test1 <- factor(sample_data$week,levels = sample_data$week)#rank the week as the actual time
+graph_numberResponse <- data.frame(test1,sample_data$number_response, sample_data$year)
+
+#change the name of columns
+setnames(graph_numberResponse,"test1","week")
+setnames(graph_numberResponse,"sample_data.number_response","number_response")
+setnames(graph_numberResponse,"sample_data.year","year")
+
+#create the barplot 
+p <- ggplot(data = graph_numberResponse, mapping = aes(x = number_response, y = week))
+p + geom_col(mapping = aes(fill = year))+ geom_text(mapping = aes(label = number_response),colour = 'red', vjust = 0.1, hjust = - 0.1)
