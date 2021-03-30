@@ -111,5 +111,5 @@ day_diff_2<-deaths_data[,1:(ncol(deaths_data)-1)]
 day_diff_2<-cbind(0,day_diff_2)
 day_num_diff_2<- deaths_data - day_diff_2
 
-#day_num_diff_2 <- as.data.frame(t(apply(day_num_diff_2,2,sum)))
+day_num_diff_2 <- as.data.frame(t(apply(day_num_diff_2,2,sum)))
 
