@@ -1,8 +1,5 @@
-#authored by Jinhao Lu; all rights reserved;
-#email: jxl469@psu.edu
-setwd("~/DS340W")
+setwd("~/Desktop/DS 340W/paper data")
 
-#load library
 library("data.table")
 library("ggplot2")
 
@@ -28,12 +25,11 @@ setnames(graph_numberResponse,"sample_data.year","year")
 p <- ggplot(data = graph_numberResponse, mapping = aes(x = number_response, y = week))
 p + geom_col(mapping = aes(fill = year))+ geom_text(mapping = aes(label = number_response),colour = 'red', vjust = 0.1, hjust = - 0.1)
 
-#National Estimate
-national<- data[Group == 'National Estimate']
+
 
 #============================== covid 19 confirmed data ==============================
 #load data
-confirmed_19 <- fread("covid_19_confirmed.csv")
+confirmed_19 <- fread("covid_19_confirmed.csv")#https://www.kaggle.com/sudalairajkumar/novel-corona-virus-2019-dataset?select=covid_19_data.csv
 
 #state column
 state <- as.data.frame(confirmed_19$Province_State)
@@ -62,54 +58,139 @@ a <- test[,2:15]
 num_confirmed <- as.data.frame(t(apply(a,2,sum)))
 
 #calculate the difference by months
-diff_1<-num_confirmed[,1:(ncol(num_confirmed)-1)]
-diff_1<-cbind(0,diff_1)
-num_diff<- num_confirmed - diff_1
+diff <- num_confirmed[,1:(ncol(num_confirmed)-1)]
+diff <- cbind(0,diff)
+confirmed_num_diff <- num_confirmed - diff
 
 #calculate the difference by days
-day_diff_1<-confirmed_data[,1:(ncol(confirmed_data)-1)]
-day_diff_1<-cbind(0,day_diff_1)
-day_num_diff<- confirmed_data - day_diff_1
+day_diff <- confirmed_data[,1:(ncol(confirmed_data)-1)]
+day_diff <- cbind(0,day_diff)
+day_num_diff <- confirmed_data - day_diff
 
-day_num_diff <- as.data.frame(t(apply(day_num_diff,2,sum)))
+confirmend_day_num_diff <- as.data.frame(t(apply(day_num_diff,2,sum)))
 #============================== covid 19 deaths data ==============================
 #load data
-deaths_19 <- fread("covid_19_deaths.csv")
+deaths_19 <- fread("covid_19_deaths.csv")#https://www.kaggle.com/sudalairajkumar/novel-corona-virus-2019-dataset?select=covid_19_data.csv
 
 #state column
-state_2 <- as.data.frame(deaths_19$Province_State)
+state <- as.data.frame(deaths_19$Province_State)
 
 #confirmed number column
 deaths_data <- deaths_19[,13:415]
 
-test_2 <- state_2
-test_2$Jan_20 <- deaths_data[,10]
-test_2$Feb_20 <- deaths_data[,39]
-test_2$Mar_20 <- deaths_data[,70]
-test_2$Apr_20 <- deaths_data[,100]
-test_2$May_20 <- deaths_data[,131]
-test_2$Jun_20 <- deaths_data[,161]
-test_2$Jul_20 <- deaths_data[,192]
-test_2$Aug_20 <- deaths_data[,223]
-test_2$Sep_20 <- deaths_data[,253]
-test_2$Oct_20 <- deaths_data[,284]
-test_2$Nov_20 <- deaths_data[,314]
-test_2$Dec_20 <- deaths_data[,345]
-test_2$Jan_21 <- deaths_data[,376]
-test_2$Feb_21 <- deaths_data[,403]
+test <- state
+test$Jan_20 <- deaths_data[,10]
+test$Feb_20 <- deaths_data[,39]
+test$Mar_20 <- deaths_data[,70]
+test$Apr_20 <- deaths_data[,100]
+test$May_20 <- deaths_data[,131]
+test$Jun_20 <- deaths_data[,161]
+test$Jul_20 <- deaths_data[,192]
+test$Aug_20 <- deaths_data[,223]
+test$Sep_20 <- deaths_data[,253]
+test$Oct_20 <- deaths_data[,284]
+test$Nov_20 <- deaths_data[,314]
+test$Dec_20 <- deaths_data[,345]
+test$Jan_21 <- deaths_data[,376]
+test$Feb_21 <- deaths_data[,403]
 
-b <- test_2[,2:15]
-num_deaths <- as.data.frame(t(apply(b,2,sum)))
+a <- test[,2:15]
+num_deaths <- as.data.frame(t(apply(a,2,sum)))
 
 #calculate the difference between by months
-diff_2<-num_deaths[,1:(ncol(num_deaths)-1)]
-diff_2<-cbind(0,diff_2)
-death_num_diff<- num_deaths - diff_2
+diff <- num_deaths[,1:(ncol(num_deaths)-1)]
+diff <- cbind(0,diff)
+death_num_diff <- num_deaths - diff
 
 #calculate the difference by days
-day_diff_2<-deaths_data[,1:(ncol(deaths_data)-1)]
-day_diff_2<-cbind(0,day_diff_2)
-day_num_diff_2<- deaths_data - day_diff_2
+day_diff <- deaths_data[,1:(ncol(deaths_data)-1)]
+day_diff <- cbind(0,day_diff)
+day_num_diff <- deaths_data - day_diff
 
-day_num_diff_2 <- as.data.frame(t(apply(day_num_diff_2,2,sum)))
+deaths_day_num_diff <- as.data.frame(t(apply(day_num_diff,2,sum)))
 
+#====================================================================================
+#infection rate of New York
+NewYork <- confirmed_19[Province_State == 'New York']
+NewYork_confirmed <- as.data.frame(NewYork$Province_State)
+NewYork <- NewYork[,12:414]
+
+#NewYork_confirmed number by month 
+NewYork_confirmed$Jan_20 <- NewYork[,10]
+NewYork_confirmed$Feb_20 <- NewYork[,39]
+NewYork_confirmed$Mar_20 <- NewYork[,70]
+NewYork_confirmed$Apr_20 <- NewYork[,100]
+NewYork_confirmed$May_20 <- NewYork[,131]
+NewYork_confirmed$Jun_20 <- NewYork[,161]
+NewYork_confirmed$Jul_20 <- NewYork[,192]
+NewYork_confirmed$Aug_20 <- NewYork[,223]
+NewYork_confirmed$Sep_20 <- NewYork[,253]
+NewYork_confirmed$Oct_20 <- NewYork[,284]
+NewYork_confirmed$Nov_20 <- NewYork[,314]
+NewYork_confirmed$Dec_20 <- NewYork[,345]
+NewYork_confirmed$Jan_21 <- NewYork[,376]
+NewYork_confirmed$Feb_21 <- NewYork[,403]
+
+c <- NewYork_confirmed[,2:15]
+NewYork_confirmed <- as.data.frame(t(apply(c,2,sum)))
+#Population estimates of New york 2019 = 19453561 https://www.census.gov/quickfacts/NY
+pop <- 19453561
+#infection rate
+NewYork_rate <- NewYork_confirmed/pop
+
+
+#California
+California <- confirmed_19[Province_State == 'California']
+California_confirmed <- as.data.frame(California$Province_State)
+California <- California[,12:414]
+
+#California_confirmed number by month 
+California_confirmed$Jan_20 <- California[,10]
+California_confirmed$Feb_20 <- California[,39]
+California_confirmed$Mar_20 <- California[,70]
+California_confirmed$Apr_20 <- California[,100]
+California_confirmed$May_20 <- California[,131]
+California_confirmed$Jun_20 <- California[,161]
+California_confirmed$Jul_20 <- California[,192]
+California_confirmed$Aug_20 <- California[,223]
+California_confirmed$Sep_20 <- California[,253]
+California_confirmed$Oct_20 <- California[,284]
+California_confirmed$Nov_20 <- California[,314]
+California_confirmed$Dec_20 <- California[,345]
+California_confirmed$Jan_21 <- California[,376]
+California_confirmed$Feb_21 <- California[,403]
+
+c <- California_confirmed[,2:15]
+California_confirmed <- as.data.frame(t(apply(c,2,sum)))
+#Population estimates of California = 39512223 https://www.census.gov/quickfacts/fact/table/CA/PST045219
+pop <- 39512223
+#infection rate
+California_rate <- California_confirmed/pop
+
+#Florida
+Florida <- confirmed_19[Province_State == 'Florida']
+Florida_confirmed <- as.data.frame(Florida$Province_State)
+Florida <- Florida[,12:414]
+
+#Florida_confirmed number by month 
+Florida_confirmed$Jan_20 <- Florida[,10]
+Florida_confirmed$Feb_20 <- Florida[,39]
+Florida_confirmed$Mar_20 <- Florida[,70]
+Florida_confirmed$Apr_20 <- Florida[,100]
+Florida_confirmed$May_20 <- Florida[,131]
+Florida_confirmed$Jun_20 <- Florida[,161]
+Florida_confirmed$Jul_20 <- Florida[,192]
+Florida_confirmed$Aug_20 <- Florida[,223]
+Florida_confirmed$Sep_20 <- Florida[,253]
+Florida_confirmed$Oct_20 <- Florida[,284]
+Florida_confirmed$Nov_20 <- Florida[,314]
+Florida_confirmed$Dec_20 <- Florida[,345]
+Florida_confirmed$Jan_21 <- Florida[,376]
+Florida_confirmed$Feb_21 <- Florida[,403]
+
+c <- Florida_confirmed[,2:15]
+Florida_confirmed <- as.data.frame(t(apply(c,2,sum)))
+#Population estimates of Florida = 21477737  https://www.census.gov/quickfacts/FL
+pop <- 21477737
+#infection rate
+Florida_rate <- Florida_confirmed/pop
