@@ -113,6 +113,26 @@ day_num_diff <- deaths_data - day_diff
 
 deaths_day_num_diff <- as.data.frame(t(apply(day_num_diff,2,sum)))
 
+state <- t(list('confirmed_num','deaths_num'))
+state <- as.data.frame(state)
+confirmed_num_diff <- cbind(state$V1, confirmed_num_diff)
+death_num_diff <- cbind(state$V2, death_num_diff)
+
+setnames(confirmed_num_diff,'"confirmed_num"',"National_Estimate")
+setnames(death_num_diff,'"deaths_num"',"National_Estimate")
+
+#National_Estimate <- rbind(confirmed_num_diff, death_num_diff)
+confirmed_num_diff <- as.data.table(confirmed_num_diff)
+confirmed_num_diff<-melt(confirmed_num_diff,id.vars= c("National_Estimate"),variable.name="Month",value.name="number")
+
+death_num_diff <- as.data.table(death_num_diff)
+death_num_diff<-melt(death_num_diff,id.vars= c("National_Estimate"),variable.name="Month",value.name="number")
+
+
+ggplot(data = confirmed_num_diff, mapping = aes(x = confirmed_num_diff$Month, y = confirmed_num_diff$number, colour , group = 1)) + geom_line()
+
+ggplot(data = death_num_diff, mapping = aes(x = death_num_diff$Month, y = death_num_diff$number, colour , group = 1)) + geom_line()
+
 #=================================infection rate by states===================================
 setwd("~/Desktop/DS 340W/paper data")
 
