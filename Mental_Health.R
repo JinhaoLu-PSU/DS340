@@ -28,6 +28,10 @@ p + geom_col(mapping = aes(fill = year))+ geom_text(mapping = aes(label = number
 
 
 #============================== covid 19 confirmed data ==============================
+setwd("~/Desktop/DS 340W/paper data")
+
+library("data.table")
+library("ggplot2")
 #load data
 confirmed_19 <- fread("covid_19_confirmed.csv")#https://www.kaggle.com/sudalairajkumar/novel-corona-virus-2019-dataset?select=covid_19_data.csv
 
@@ -110,6 +114,15 @@ day_num_diff <- deaths_data - day_diff
 deaths_day_num_diff <- as.data.frame(t(apply(day_num_diff,2,sum)))
 
 #=================================infection rate by states===================================
+setwd("~/Desktop/DS 340W/paper data")
+
+library("data.table")
+library("ggplot2")
+#load data
+confirmed_19 <- fread("covid_19_confirmed.csv")#https://www.kaggle.com/sudalairajkumar/novel-corona-virus-2019-dataset?select=covid_19_data.csv
+deaths_19 <- fread("covid_19_deaths.csv")#https://www.kaggle.com/sudalairajkumar/novel-corona-virus-2019-dataset?select=covid_19_data.csv
+
+
 #infection rate of New York
 NewYork <- confirmed_19[Province_State == 'New York']
 NewYork_confirmed <- as.data.frame(NewYork$Province_State)
@@ -304,4 +317,14 @@ infection_rate <- rbind(NewYork_infection_rate,California_infection_rate,Florida
 
 deaths_rate <- rbind(NewYork_deaths_rate, California_deaths_rate, Florida_deaths_rate)
 
+infection_rate <- as.data.table(infection_rate)
+deaths_rate <- as.data.table(deaths_rate)
+
+infection_rate<-melt(infection_rate,id.vars= "state",variable.name="Month",value.name="rate")
+deaths_rate<-melt(deaths_rate,id.vars= "state",variable.name="Month",value.name="rate")
+
+
+ggplot(data = infection_rate, mapping = aes(x = infection_rate$Month, y = infection_rate$rate, colour = infection_rate$state, group = infection_rate$state)) + geom_line()
+
+ggplot(data = deaths_rate, mapping = aes(x = deaths_rate$Month, y = deaths_rate$rate, colour = deaths_rate$state, group = deaths_rate$state)) + geom_line()
 
