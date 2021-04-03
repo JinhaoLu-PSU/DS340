@@ -83,6 +83,42 @@ theme(axis.text.x = element_text(hjust = 1, vjust = .5))+
 scale_x_date(date_labels = "%Y %b")+ylab("Percentage")+ 
 ggtitle("Symptoms of Anxiety Disorder or Depressive Disorder In Pennsylvania")
 
+SADDD_state<-SADDD[Group=="By State"]
+SADDD_CA<-SADDD_state[State=="California"]
+p <- ggplot(na.omit(SADDD_CA),aes(Time, Value))
+p + geom_point(aes(colour = factor(Subgroup)), size = 4)+
+geom_line(aes(colour = factor(Subgroup)))+
+theme(axis.text.x = element_text(hjust = 1, vjust = .5))+
+scale_x_date(date_labels = "%Y %b")+ylab("Percentage")+ 
+ggtitle("Symptoms of Anxiety Disorder or Depressive Disorder In California")
+
+SADDD_NY<-SADDD_state[State=="New York"]
+p <- ggplot(na.omit(SADDD_NY),aes(Time, Value))
+p + geom_point(aes(colour = factor(Subgroup)), size = 4)+
+geom_line(aes(colour = factor(Subgroup)))+
+theme(axis.text.x = element_text(hjust = 1, vjust = .5))+
+scale_x_date(date_labels = "%Y %b")+ylab("Percentage")+ 
+ggtitle("Symptoms of Anxiety Disorder or Depressive Disorder In New York")
+
+SADDD_FL<-SADDD_state[State=="Florida"]
+p <- ggplot(na.omit(SADDD_FL),aes(Time, Value))
+p + geom_point(aes(colour = factor(Subgroup)), size = 4)+
+geom_line(aes(colour = factor(Subgroup)))+
+theme(axis.text.x = element_text(hjust = 1, vjust = .5))+
+scale_x_date(date_labels = "%Y %b")+ylab("Percentage")+ 
+ggtitle("Symptoms of Anxiety Disorder or Depressive Disorder In Florida")
+
+#useless-
+#SADDD_state<-SADDD[Group=="By State"]
+#setkey(SADDD_state,State)
+#SADDD_CANY<-SADDD_state[c("California","Florida","New York")]
+#p <- ggplot(na.omit(SADDD_CANY),aes(Time, Value))
+#p + geom_point(aes(colour = factor(Subgroup)), size = 4)+
+#geom_line(aes(colour = factor(Subgroup)))+
+#theme(axis.text.x = element_text(hjust = 1, vjust = .5))+
+#scale_x_date(date_labels = "%Y %b")+ylab("Percentage")+ 
+#ggtitle("Symptoms of Anxiety Disorder or Depressive Disorder In CA,NY,FL")
+
 
 ################----------USE Num_response dataset----------#######################
 
