@@ -1,4 +1,4 @@
-setwd("~/Desktop/DS 340W/paper data")
+setwd("~/DS340W")
 
 library("data.table")
 library("ggplot2")
@@ -26,13 +26,12 @@ p <- ggplot(data = graph_numberResponse, mapping = aes(x = number_response, y = 
 p + geom_col(mapping = aes(fill = year))+ geom_text(mapping = aes(label = number_response),colour = 'red', vjust = 0.1, hjust = - 0.1)
 
 
-
 #============================== covid 19 confirmed data ==============================
-setwd("~/Desktop/DS 340W/paper data")
-
-library("data.table")
-library("ggplot2")
+#setwd("~/Desktop/DS 340W/paper data")
+#library("data.table")
+#library("ggplot2")
 #load data
+
 confirmed_19 <- fread("covid_19_confirmed.csv")#https://www.kaggle.com/sudalairajkumar/novel-corona-virus-2019-dataset?select=covid_19_data.csv
 
 #state column
@@ -59,6 +58,7 @@ test$Jan_21 <- confirmed_data[,376]
 test$Feb_21 <- confirmed_data[,403]
 
 c <- test[,2:15]
+#sum up the total number of each month
 num_confirmed <- as.data.frame(t(apply(c,2,sum)))
 
 #calculate the difference by months
@@ -71,6 +71,7 @@ day_diff <- confirmed_data[,1:(ncol(confirmed_data)-1)]
 day_diff <- cbind(0,day_diff)
 day_num_diff <- confirmed_data - day_diff
 
+#sum up the total number of each day
 confirmend_day_num_diff <- as.data.frame(t(apply(day_num_diff,2,sum)))
 #============================== covid 19 deaths data ==============================
 #load data
@@ -99,6 +100,7 @@ test$Jan_21 <- deaths_data[,376]
 test$Feb_21 <- deaths_data[,403]
 
 c <- test[,2:15]
+#sum up the total number of each month
 num_deaths <- as.data.frame(t(apply(c,2,sum)))
 
 #calculate the difference between by months
@@ -111,37 +113,41 @@ day_diff <- deaths_data[,1:(ncol(deaths_data)-1)]
 day_diff <- cbind(0,day_diff)
 day_num_diff <- deaths_data - day_diff
 
+#sum up the total number of each day
 deaths_day_num_diff <- as.data.frame(t(apply(day_num_diff,2,sum)))
 
+#combine the columns
 state <- t(list('confirmed_num','deaths_num'))
 state <- as.data.frame(state)
 confirmed_num_diff <- cbind(state$V1, confirmed_num_diff)
 death_num_diff <- cbind(state$V2, death_num_diff)
 
+#change column name
 setnames(confirmed_num_diff,'"confirmed_num"',"National_Estimate")
 setnames(death_num_diff,'"deaths_num"',"National_Estimate")
 
 #National_Estimate <- rbind(confirmed_num_diff, death_num_diff)
+#melt table in to tidy table form
 confirmed_num_diff <- as.data.table(confirmed_num_diff)
 confirmed_num_diff<-melt(confirmed_num_diff,id.vars= c("National_Estimate"),variable.name="Month",value.name="number")
 
+#melt table in to tidy table form
 death_num_diff <- as.data.table(death_num_diff)
 death_num_diff<-melt(death_num_diff,id.vars= c("National_Estimate"),variable.name="Month",value.name="number")
 
-
+#plot the line graph
 ggplot(data = confirmed_num_diff, mapping = aes(x = confirmed_num_diff$Month, y = confirmed_num_diff$number, colour , group = 1)) + geom_line()
 
 ggplot(data = death_num_diff, mapping = aes(x = death_num_diff$Month, y = death_num_diff$number, colour , group = 1)) + geom_line()
 
+
 #=================================infection rate by states===================================
-setwd("~/Desktop/DS 340W/paper data")
-
-library("data.table")
-library("ggplot2")
+#setwd("~/Desktop/DS 340W/paper data")
+#library("data.table")
+#library("ggplot2")
 #load data
-confirmed_19 <- fread("covid_19_confirmed.csv")#https://www.kaggle.com/sudalairajkumar/novel-corona-virus-2019-dataset?select=covid_19_data.csv
-deaths_19 <- fread("covid_19_deaths.csv")#https://www.kaggle.com/sudalairajkumar/novel-corona-virus-2019-dataset?select=covid_19_data.csv
-
+#confirmed_19 <- fread("covid_19_confirmed.csv")#https://www.kaggle.com/sudalairajkumar/novel-corona-virus-2019-dataset?select=covid_19_data.csv
+#deaths_19 <- fread("covid_19_deaths.csv")#https://www.kaggle.com/sudalairajkumar/novel-corona-virus-2019-dataset?select=covid_19_data.csv
 
 #infection rate of New York
 NewYork <- confirmed_19[Province_State == 'New York']
@@ -228,7 +234,6 @@ pop <- 21477737
 #infection rate
 Florida_infection_rate <- Florida_confirmed/pop
 
-
 #=================================deaths rate by states===================================
 #deaths rate of New York
 NewYork <- deaths_19[Province_State == 'New York']
@@ -257,7 +262,6 @@ NewYork_deaths <- as.data.frame(t(apply(c,2,sum)))
 #Population estimates of New york 2019 = 19453561 https://www.census.gov/quickfacts/NY
 #infection rate
 NewYork_deaths_rate <- NewYork_deaths/pop
-
 
 #California
 California <- deaths_19[Province_State == 'California']
@@ -317,6 +321,8 @@ Florida_deaths_rate <- Florida_deaths/pop
 
 state <- t(list('New York','California','Florida'))
 state <- as.data.frame(state)
+
+#combine column 
 NewYork_infection_rate <- cbind(state$V1, NewYork_infection_rate)
 California_infection_rate <- cbind(state$V2, California_infection_rate)
 Florida_infection_rate <- cbind(state$V3, Florida_infection_rate)
@@ -325,6 +331,7 @@ NewYork_deaths_rate <- cbind(state$V1, NewYork_deaths_rate)
 California_deaths_rate <- cbind(state$V2, California_deaths_rate)
 Florida_deaths_rate <- cbind(state$V3, Florida_deaths_rate)
 
+#change column name
 setnames(NewYork_infection_rate,'"New York"',"state")
 setnames(California_infection_rate,'"California"',"state")
 setnames(Florida_infection_rate,'"Florida"',"state")
@@ -333,17 +340,18 @@ setnames(NewYork_deaths_rate,'"New York"',"state")
 setnames(California_deaths_rate,'"California"',"state")
 setnames(Florida_deaths_rate,'"Florida"',"state")
 
+#combine the row
 infection_rate <- rbind(NewYork_infection_rate,California_infection_rate,Florida_infection_rate)
-
 deaths_rate <- rbind(NewYork_deaths_rate, California_deaths_rate, Florida_deaths_rate)
 
 infection_rate <- as.data.table(infection_rate)
 deaths_rate <- as.data.table(deaths_rate)
 
+#melt table in to tidy table form
 infection_rate<-melt(infection_rate,id.vars= "state",variable.name="Month",value.name="rate")
 deaths_rate<-melt(deaths_rate,id.vars= "state",variable.name="Month",value.name="rate")
 
-
+#plot the line graph
 ggplot(data = infection_rate, mapping = aes(x = infection_rate$Month, y = infection_rate$rate, colour = infection_rate$state, group = infection_rate$state)) + geom_line()
 
 ggplot(data = deaths_rate, mapping = aes(x = deaths_rate$Month, y = deaths_rate$rate, colour = deaths_rate$state, group = deaths_rate$state)) + geom_line()
